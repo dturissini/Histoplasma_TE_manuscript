@@ -1,0 +1,54 @@
+cd /work/users/d/t/dturissi/histoplasma/te_analysis
+
+mkdir -p genome_per_csvs
+mkdir -p logs
+mkdir -p plots
+mkdir -p tables
+
+#load list of subset of samples to use in manuscript
+python3 load_histoplasma_manuscript_samples.py
+
+#load genome assembly stats
+load_histoplasma_assembly_stats.py
+
+#load different naming schemes
+python3 make_histoplasma_tree_names.py
+
+
+#load scaffold lengths and get genome lengths
+python3 get_histoplasma_scaffold_lengths.py
+
+
+
+
+
+#load EDTA-RM results
+python3 process_results_edta_rm.py
+
+#load EDTA-only results
+python3 process_results_edta_only.py
+
+
+##############
+#steps run to confirm that there is no overlap between DNA/DTT and TIR/TC1_Mariner
+#after no overlap was confirmed, process_results_edta_rm.py and process_results_edta_only.py were modified to convert TIR/TC1_Mariner to DNA/DTT and were rerun
+python3 get_dna_dtt_tir_tc1_mariner_overlaps.py
+
+#queries to confirm no overlap in:
+dna_dtt_tir_tc1_mariner_queries.sql
+##############
+
+
+#get genomioc TE percentages for all four TE approaches
+python3 make_histoplasma_te_genome_pers.py
+
+Rscript get_te_per_genome_len_corrs.R
+
+
+#results
+Rscript histoplasma_te_genomic_per_comps.R
+Rscript histoplasma_te_genomic_per_heatmaps.R
+Rscript histoplasma_te_genomic_per_length_corr.R
+Rscript histoplasma_TE_hit_props.R
+
+#run queries in histoplasma_te_manuscript_tables.sql

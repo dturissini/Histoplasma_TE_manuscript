@@ -1,0 +1,35 @@
+mkdir -p /work/users/d/t/dturissi/histoplasma/dnaPipeTE
+mkdir -p /work/users/d/t/dturissi/histoplasma/dnaPipeTE/logs
+mkdir -p /work/users/d/t/dturissi/histoplasma/dnaPipeTE/plots
+
+cd /work/users/d/t/dturissi/histoplasma/dnaPipeTE
+
+#load fastq file paths and make table with sample names used in the tree
+python3 load_histoplasma_fastq.py
+
+
+
+
+#run dnaPipeTE
+python3 make_run_dnaPipeTE_scripts.py all_1_5_02
+python3 make_run_dnaPipeTE_scripts.py low_cov
+python3 make_run_dnaPipeTE_scripts.py more_params
+
+
+python3 make_run_dnaPipeTE_EDTA_lib_scripts.py edta_lib_1_5_02
+python3 make_run_dnaPipeTE_EDTA_lib_scripts.py edta_lib_rerun
+python3 make_run_dnaPipeTE_EDTA_lib_scripts.py edta_lib_more_params
+
+sbatch all_1_5_02_run_dnaPipeTE.sbatch.sbatch
+sbatch low_cov_run_dnaPipeTE.sbatch
+sbatch more_params_run_dnaPipeTE.sbatch
+
+
+sbatch edta_lib_1_5_02_run_dnaPipeTE_edta_libs.sbatch
+sbatch edta_lib_rerun_run_dnaPipeTE_edta_libs.sbatch
+sbatch edta_lib_more_params_run_dnaPipeTE_edta_libs.sbatch
+
+
+#process and load dnaPipeTE results
+python3 process_dnaPipeTE_results.py
+python3 process_dnaPipeTE_results_edta_lib.py
